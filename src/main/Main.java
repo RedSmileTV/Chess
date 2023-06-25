@@ -14,4 +14,11 @@ public class Main {
         }
         else return 'i';
     }
+
+    public static int updateX(int x) {
+        return x--;
+    }
+    public static int updateY(int y) {
+        return (y - 8) * -1;
+    }
 }

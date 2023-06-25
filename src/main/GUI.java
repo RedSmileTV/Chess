@@ -63,8 +63,7 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
 
-
-
+        updateSquareIcon(1, 1);
         setResizable(false);
         setVisible(true);
     }
@@ -81,20 +80,29 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void updateSquareIcon(int x, int y) {
-        Piece piece = board.getPiece(x, y);
+        x = Main.updateX(x);
+        y = Main.updateY(y);
+        System.out.println(x);
+        System.out.println(y);
+//        board = new Board();
+//        Piece piece = board.getPiece(x, y);
+        Piece piece = new Pawn(true);
 
         if (piece != null) {
             // Set the button icon based on the piece
             // For example, you can use ImageIcon to represent the different pieces
             // You can modify this code to set the appropriate icons based on your implementation
             if (piece instanceof Pawn) {
-                ImageIcon pawnIcon;
-                if (piece.isWhite())
+                ImageIcon pawnIcon, scaledPawnIcon;
+                Image scaledPawnImage;
+                if (piece.isWhite()) {
                     pawnIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
+                    scaledPawnImage = pawnIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                    scaledPawnIcon = new ImageIcon(scaledPawnImage);
+                    boardSquares[y][x].setIcon(scaledPawnIcon);
+                }
 
                 else pawnIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackPawn.png")));
-
-                boardSquares[x][y].setIcon(pawnIcon);
             } else if (piece instanceof Rook) {
                 // Set the rook icon
                 // ...
