@@ -3,6 +3,7 @@ package main;
 import main.pieces.*;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +11,10 @@ import java.util.Objects;
 
 public class GUI extends JFrame implements ActionListener {
     private final JButton[][] boardSquares = new JButton[8][8];
-    private JPanel boardPanel = new JPanel(new GridLayout(8, 8));
-    private JPanel sidePanel = new JPanel();
-    private Board board;
+    private final JPanel boardPanel = new JPanel(new GridLayout(8, 8));
+    private final JPanel sidePanel = new JPanel();
+    private final Board board = new Board();
+    private final JButton resetButton = new JButton();
 
     public GUI() {
         super();
@@ -38,12 +40,35 @@ public class GUI extends JFrame implements ActionListener {
         boardPanel.setOpaque(true);
         boardPanel.setBackground(Color.WHITE);
         boardPanel.setBorder(new javax.swing.border.LineBorder(new Color(0xC0C0C0), 4));
-        cp.add(boardPanel);
 
         sidePanel.setBounds(616, 16, 148, 600);
         sidePanel.setOpaque(true);
         sidePanel.setBackground(new Color(0x232323));
-        sidePanel.setBorder(new javax.swing.border.LineBorder(Color.GRAY, 4));
+        sidePanel.setBorder(new LineBorder(Color.GRAY, 4));
+
+        resetButton.setBounds(641, 32, 100, 50);
+        resetButton.setBackground(Color.BLACK);
+        resetButton.setBorder(new LineBorder(Color.WHITE, 4));
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setText("Reset");
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                if (event.getSource() == resetButton) {
+                    board.initializeBoard();
+
+                    for (int x = 0; x < 8; x++) {
+                        for (int y = 0; y < 8; y++) {
+                            updateSquareIcon(x + 1, y + 1, board);
+                        }
+                    }
+                } else {
+                    // Rest of the actionPerformed method...
+                }
+            }
+        });
+        cp.add(boardPanel);
+        cp.add(resetButton);
         cp.add(sidePanel);
 
         for (int i = 0; i < 8; i++) {
@@ -56,14 +81,12 @@ public class GUI extends JFrame implements ActionListener {
 
                 if ((i + j) % 2 == 0) {
                     boardSquares[i][j].setBackground(new Color(245, 245, 230));
-                    //Font color black
+                    // Dunkle Felder
                 }
                 else boardSquares[i][j].setBackground(new Color(0, 80, 0));
-                //Font color white
+                // Helle Felder
             }
         }
-
-        updateSquareIcon(1, 1);
         setResizable(false);
         setVisible(true);
     }
@@ -71,56 +94,85 @@ public class GUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         int a = Integer.parseInt(event.getActionCommand());
-        int x = a / 8 + 1;
+//        int x = a / 8 + 1;
+//        int y = a % 8;
+//        y = (y - 8) * -1;
+
+        int x = a / 8;
         int y = a % 8;
 
-        y = (y - 8) * -1;
-
         System.out.println("x: " + x + " y: " + y);
+
+
     }
 
-    private void updateSquareIcon(int x, int y) {
-        x = Main.updateX(x);
-        y = Main.updateY(y);
+    private void updateSquareIcon(int x, int y, Board board) {
+        x = x - 1;
+        y = (y - 8) * -1;
         System.out.println(x);
         System.out.println(y);
-//        board = new Board();
-//        Piece piece = board.getPiece(x, y);
-        Piece piece = new Pawn(true);
+        Piece piece = board.getPiece(x, y);
 
         if (piece != null) {
-            // Set the button icon based on the piece
-            // For example, you can use ImageIcon to represent the different pieces
-            // You can modify this code to set the appropriate icons based on your implementation
-            if (piece instanceof Pawn) {
-                ImageIcon pawnIcon, scaledPawnIcon;
-                Image scaledPawnImage;
-                if (piece.isWhite()) {
-                    pawnIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
-                    scaledPawnImage = pawnIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-                    scaledPawnIcon = new ImageIcon(scaledPawnImage);
-                    boardSquares[y][x].setIcon(scaledPawnIcon);
-                }
+            // Zeigt das jeweilige icon für die jeweilige Figur an
 
-                else pawnIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackPawn.png")));
+            ImageIcon pieceIcon;
+            if (piece instanceof Pawn) {
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackPawn.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
+
             } else if (piece instanceof Rook) {
-                // Set the rook icon
-                // ...
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteRook.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackRook.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
+
             } else if (piece instanceof Knight) {
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKnight.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKnight.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
                 
             } else if (piece instanceof Bishop) {
-                
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteBishop.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackBishop.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
+
             } else if (piece instanceof Queen) {
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteQueen.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackQueen.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
                 
             } else if (piece instanceof King) {
+                if (piece.isWhite()) {
+                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKing.png")));
+                }
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKing.png")));
+
+                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
                 
             }
-            // Handle other piece types
-            // ...
-        } else {
-            // Set the button icon to null (no piece)
-            boardSquares[x][y].setIcon(null);
-        }
+
+        } else boardSquares[x][y].setIcon(null);
+    }
+
+    private ImageIcon resizeIcon(ImageIcon pieceIcon) {
+        Image scaledPieceImage = pieceIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledPieceImage);
     }
     
 }

@@ -8,8 +8,10 @@ public class Knight extends Piece {
     }
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
-        // Implementation of valid move logic for a knight
-        // ...
-        return true;
+        //Laufmechanik vom Springer
+        int rowDiff = Math.abs(endX - startX);
+        int colDiff = Math.abs(endY - startY);
+
+        return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
     }
 }

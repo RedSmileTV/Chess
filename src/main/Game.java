@@ -11,22 +11,16 @@ public class Game {
         isWhiteTurn = true;
     }
 
-    public void makeMove(int startX, int startY, int endX, int endY) {
-        if (board.isValidMove(startX, startY, endX, endY)) {
-            Piece piece = board.getPiece(startX, startY);
-            board.setPiece(endX, endY, piece);
-            board.setPiece(startX, startY, null);
-            isWhiteTurn = !isWhiteTurn;
-            // Print the board after each move
-            printBoard();
-        } else {
-            // Invalid move
-            System.out.println("Invalid move!");
+    public boolean makeMove(int startX, int startY, int endX, int endY) {
+        if (!board.isValidMove(startX, startY, endX, endY)) {
+            return false;
         }
+
+        Piece piece = board.getPiece(startX, startY);
+        board.setPiece(startX, startY, null);
+        board.setPiece(endX, endY, piece);
+        isWhiteTurn = !isWhiteTurn;
+        return true;
     }
 
-    public void printBoard() {
-        // Print the current state of the board
-        // ...
-    }
 }

@@ -16,13 +16,5 @@ public abstract class Piece {
         return isWhite;
     }
 
-    public ImageIcon getIcon() {
-        return icon;
-    }
-
-    public void setIcon(ImageIcon icon) {
-        this.icon = icon;
-    }
-
     public abstract boolean isValidMove(Board board, int startX, int startY, int endX, int endY);
 }

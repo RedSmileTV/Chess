@@ -9,8 +9,44 @@ public class Queen extends Piece {
 
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
-        // Implementation of valid move logic for a knight
-        // ...
-        return true;
+        //Hier werden die Laufmechanik eines Läufers und Turm gegeben
+
+        if (startX == endX || startY == endY) {
+            //Laufmechanik eines Turms
+            int dx = Integer.compare(endX, startX);
+            int dy = Integer.compare(endY, startY);
+            int x = startX + dx;
+            int y = startY + dy;
+            while (x != endX || y != endY) {
+                //kollision
+                if (board.getPiece(x, y) != null) {
+                    return false;
+                }
+                x += dx;
+                y += dy;
+            }
+            return true;
+        }
+
+        //Laufmechanik eines Läufers
+        int rowDiff = Math.abs(endX - startX);
+        int colDiff = Math.abs(endY - startY);
+        if (rowDiff == colDiff) {
+            //kollision
+            int dx = Integer.compare(endX, startX);
+            int dy = Integer.compare(endY, startY);
+            int x = startX + dx;
+            int y = startY + dy;
+            while (x != endX || y != endY) {
+                if (board.getPiece(x, y) != null) {
+                    return false;
+                }
+                x += dx;
+                y += dy;
+            }
+            return true;
+        }
+
+        return false;
     }
 }

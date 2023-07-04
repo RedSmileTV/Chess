@@ -11,9 +11,13 @@ public class Pawn extends Piece {
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         int direction = isWhite() ? 1 : -1;
 
+        // Hier wird geprüft ob der Bauer angreifen kann
         if (startY + direction == endY && startX == endX) {
-            System.out.println("Pawn moves forward");
+            if (board.getPiece(endX, endY) == null) {
+                return true;
+            }
         }
-        return true;
+
+        return false;
     }
 }

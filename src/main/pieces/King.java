@@ -9,8 +9,10 @@ public class King extends Piece {
 
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
-        // Implementation of valid move logic for a knight
-        // ...
-        return true;
+        //Laufmechanik vom König
+        int rowDiff = Math.abs(endX - startX);
+        int colDiff = Math.abs(endY - startY);
+
+        return rowDiff <= 1 && colDiff <= 1;
     }
 }
