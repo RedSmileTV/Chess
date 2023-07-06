@@ -1,10 +1,20 @@
 package main.pieces;
 
 import main.Board;
+import main.Main;
+
+import javax.swing.*;
+import java.util.Objects;
 
 public class Rook extends Piece {
+    private static final ImageIcon whiteIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteRook.png")));
+    private static final ImageIcon blackIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackRook.png")));
     public Rook(boolean isWhite) {
         super(isWhite);
+    }
+    public ImageIcon getIcon() {
+        if (isWhite()) return whiteIcon;
+        else return blackIcon;
     }
 
     @Override

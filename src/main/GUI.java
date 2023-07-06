@@ -15,6 +15,7 @@ public class GUI extends JFrame implements ActionListener {
     private final JPanel sidePanel = new JPanel();
     private final JButton resetButton = new JButton();
     private final Board board = new Board();
+    private boolean firstClick = true;
 
     public GUI() {
         super();
@@ -52,13 +53,10 @@ public class GUI extends JFrame implements ActionListener {
         resetButton.setBorder(new LineBorder(Color.WHITE, 4));
         resetButton.setForeground(Color.WHITE);
         resetButton.setText("Reset");
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                if (event.getSource() == resetButton) {
-                    board.initializeBoard();
-                    updateBoard();
-                }
+        resetButton.addActionListener(event -> {
+            if (event.getSource() == resetButton) {
+                board.initializeBoard();
+                updateBoard();
             }
         });
         cp.add(boardPanel);
@@ -86,13 +84,20 @@ public class GUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         int a = Integer.parseInt(event.getActionCommand());
-
         int x = a / 8;
         int y = a % 8;
         System.out.println("x: " + x + " y: " + y);
         System.out.println(this.board.getPiece(x, y));
 
 
+        if (firstClick) {
+            firstClick = false;
+            boardSquares[y][x].setBackground(Color.YELLOW);
+        }
+        else {
+            firstClick = true;
+            boardSquares[y][x].setBackground(Color.GREEN);
+        }
     }
 
     public void updateSquareIcon(int x, int y, Board board) {
@@ -102,32 +107,8 @@ public class GUI extends JFrame implements ActionListener {
 
         if (piece != null) {
             // Zeigt das jeweilige icon für die jeweilige Figur an
-
-            ImageIcon pieceIcon = null;
-            if (piece instanceof Pawn) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackPawn.png")));
-            }
-            else if (piece instanceof Rook) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteRook.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackRook.png")));
-            }
-            else if (piece instanceof Knight) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKnight.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKnight.png")));
-            }
-            else if (piece instanceof Bishop) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteBishop.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackBishop.png")));
-            }
-            else if (piece instanceof Queen) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteQueen.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackQueen.png")));
-            }
-            else if (piece instanceof King) {
-                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKing.png")));
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKing.png")));
-            }
+            ImageIcon pieceIcon = piece.getIcon();
+            System.out.println("x: " + x + " y: " + y);
             boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
         }
     }
