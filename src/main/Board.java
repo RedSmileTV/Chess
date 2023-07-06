@@ -4,6 +4,7 @@ import main.pieces.*;
 
 public class Board {
     private final Piece[][] grid;
+    private boolean isWhiteTurn;
 
     public Board() {
         grid = new Piece[8][8];
@@ -39,11 +40,13 @@ public class Board {
         return true;
     }
     public void initializeBoard() {
+        // Weiß beginnt
+        isWhiteTurn = true;
         // Platziert die Figuren in deren Startposition
 
         // Platziert Bauern
         for (int i = 0; i < 8; i++) {
-            grid[i][6] = new Pawn(true); // Hälfte Null
+            grid[i][6] = new Pawn(true);
             grid[i][1] = new Pawn(false);
         }
 
@@ -58,15 +61,15 @@ public class Board {
         grid[1][0] = new Knight(false);
         grid[6][0] = new Knight(false);
 
-        grid[2][7] = new Bishop(true); // Null
-        grid[5][7] = new Bishop(true); // Null
+        grid[2][7] = new Bishop(true);
+        grid[5][7] = new Bishop(true);
         grid[2][0] = new Bishop(false);
         grid[5][0] = new Bishop(false);
 
-        grid[3][7] = new Queen(true); // Null
+        grid[3][7] = new Queen(true);
         grid[3][0] = new Queen(false);
 
-        grid[4][7] = new King(true); // Null
+        grid[4][7] = new King(true);
         grid[4][0] = new King(false);
     }
 }

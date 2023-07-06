@@ -13,8 +13,8 @@ public class GUI extends JFrame implements ActionListener {
     private final JButton[][] boardSquares = new JButton[8][8];
     private final JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     private final JPanel sidePanel = new JPanel();
-    private final Board board = new Board();
     private final JButton resetButton = new JButton();
+    private final Board board = new Board();
 
     public GUI() {
         super();
@@ -36,6 +36,7 @@ public class GUI extends JFrame implements ActionListener {
         int boardWidth = 600;
         int boardHeight = 600;
 
+
         boardPanel.setBounds(16, 16, boardWidth, boardHeight);
         boardPanel.setOpaque(true);
         boardPanel.setBackground(Color.WHITE);
@@ -56,14 +57,7 @@ public class GUI extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent event) {
                 if (event.getSource() == resetButton) {
                     board.initializeBoard();
-
-                    for (int x = 0; x < 8; x++) {
-                        for (int y = 0; y < 8; y++) {
-                            updateSquareIcon(x + 1, y + 1, board);
-                        }
-                    }
-                } else {
-                    // Rest of the actionPerformed method...
+                    updateBoard();
                 }
             }
         });
@@ -79,14 +73,12 @@ public class GUI extends JFrame implements ActionListener {
                 boardSquares[i][j].addActionListener(this);
                 boardPanel.add(boardSquares[i][j]);
 
-                if ((i + j) % 2 == 0) {
-                    boardSquares[i][j].setBackground(new Color(245, 245, 230));
-                    // Dunkle Felder
-                }
-                else boardSquares[i][j].setBackground(new Color(0, 80, 0));
-                // Helle Felder
+                if ((i + j) % 2 == 0) boardSquares[i][j].setBackground(new Color(245, 245, 230)); // Dunkle Felder
+                else boardSquares[i][j].setBackground(new Color(0, 80, 0)); // Helle Felder
             }
         }
+        board.initializeBoard();
+        updateBoard();
         setResizable(false);
         setVisible(true);
     }
@@ -94,85 +86,61 @@ public class GUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         int a = Integer.parseInt(event.getActionCommand());
-//        int x = a / 8 + 1;
-//        int y = a % 8;
-//        y = (y - 8) * -1;
 
         int x = a / 8;
         int y = a % 8;
-
         System.out.println("x: " + x + " y: " + y);
+        System.out.println(this.board.getPiece(x, y));
 
 
     }
 
-    private void updateSquareIcon(int x, int y, Board board) {
+    public void updateSquareIcon(int x, int y, Board board) {
         x = x - 1;
         y = (y - 8) * -1;
-        System.out.println(x);
-        System.out.println(y);
         Piece piece = board.getPiece(x, y);
 
         if (piece != null) {
             // Zeigt das jeweilige icon für die jeweilige Figur an
 
-            ImageIcon pieceIcon;
+            ImageIcon pieceIcon = null;
             if (piece instanceof Pawn) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
-                }
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whitePawn.png")));
                 else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackPawn.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-
-            } else if (piece instanceof Rook) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteRook.png")));
-                }
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackRook.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-
-            } else if (piece instanceof Knight) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKnight.png")));
-                }
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKnight.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-                
-            } else if (piece instanceof Bishop) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteBishop.png")));
-                }
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackBishop.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-
-            } else if (piece instanceof Queen) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteQueen.png")));
-                }
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackQueen.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-                
-            } else if (piece instanceof King) {
-                if (piece.isWhite()) {
-                    pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKing.png")));
-                }
-                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKing.png")));
-
-                boardSquares[y][x].setIcon(resizeIcon(pieceIcon));
-                
             }
-
-        } else boardSquares[x][y].setIcon(null);
+            else if (piece instanceof Rook) {
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteRook.png")));
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackRook.png")));
+            }
+            else if (piece instanceof Knight) {
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKnight.png")));
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKnight.png")));
+            }
+            else if (piece instanceof Bishop) {
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteBishop.png")));
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackBishop.png")));
+            }
+            else if (piece instanceof Queen) {
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteQueen.png")));
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackQueen.png")));
+            }
+            else if (piece instanceof King) {
+                if (piece.isWhite()) pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/whiteKing.png")));
+                else pieceIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKing.png")));
+            }
+            boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
+        }
     }
 
     private ImageIcon resizeIcon(ImageIcon pieceIcon) {
         Image scaledPieceImage = pieceIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledPieceImage);
     }
-    
+    private void updateBoard() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                updateSquareIcon(x + 1, y + 1, this.board);
+            }
+        }
+    }
 }
