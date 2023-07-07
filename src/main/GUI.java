@@ -14,6 +14,7 @@ public class GUI extends JFrame implements ActionListener {
     private final JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     private final JPanel sidePanel = new JPanel();
     private final JButton resetButton = new JButton();
+    private JLabel turnLabel = new JLabel();
     private final Board board = new Board();
     private boolean firstClick = true;
 
@@ -55,11 +56,20 @@ public class GUI extends JFrame implements ActionListener {
         resetButton.setText("Reset");
         resetButton.addActionListener(event -> {
             if (event.getSource() == resetButton) {
+                board.clearBoard();
                 board.initializeBoard();
                 updateBoard();
             }
         });
+
+        turnLabel.setBounds(641, 94, 100, 50);
+        turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        turnLabel.setVerticalAlignment(SwingConstants.CENTER);
+        turnLabel.setOpaque(true);
+        turnLabel.setBorder(new LineBorder(Color.GRAY, 4));
+        turnChecker();
         cp.add(boardPanel);
+        cp.add(turnLabel);
         cp.add(resetButton);
         cp.add(sidePanel);
 
@@ -75,7 +85,6 @@ public class GUI extends JFrame implements ActionListener {
                 else boardSquares[i][j].setBackground(new Color(0, 80, 0)); // Helle Felder
             }
         }
-        board.initializeBoard();
         updateBoard();
         setResizable(false);
         setVisible(true);
@@ -90,13 +99,40 @@ public class GUI extends JFrame implements ActionListener {
         System.out.println(this.board.getPiece(x, y));
 
 
+        Piece piece;
+
         if (firstClick) {
             firstClick = false;
             boardSquares[y][x].setBackground(Color.YELLOW);
+            piece = board.getPiece(x, y);
+
+
+
         }
         else {
             firstClick = true;
+            // White pawn testing
+            piece = board.getPiece(x, y);
+            if (piece.isValidMove(board, x, y, x, y - 1)) {
+                board.makeMove(x, y, x, y - 1);
+                updateBoard();
+            }
+            else System.out.println("Invalid move!!!!!");
+            board.setTurn(!board.getTurn());
+            turnChecker();
             boardSquares[y][x].setBackground(Color.GREEN);
+        }
+    }
+    private void turnChecker() {
+        if (board.getTurn()) {
+            turnLabel.setText("White's turn");
+            turnLabel.setForeground(Color.BLACK);
+            turnLabel.setBackground(Color.WHITE);
+        }
+        else {
+            turnLabel.setText("Black's turn");
+            turnLabel.setForeground(Color.WHITE);
+            turnLabel.setBackground(Color.BLACK);
         }
     }
 
@@ -108,9 +144,10 @@ public class GUI extends JFrame implements ActionListener {
         if (piece != null) {
             // Zeigt das jeweilige icon für die jeweilige Figur an
             ImageIcon pieceIcon = piece.getIcon();
-            System.out.println("x: " + x + " y: " + y);
+//            System.out.println("x: " + x + " y: " + y);
             boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
         }
+        else boardSquares[y][x].setIcon(null);
     }
 
     private ImageIcon resizeIcon(ImageIcon pieceIcon) {
