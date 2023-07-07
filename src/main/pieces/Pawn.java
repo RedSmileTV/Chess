@@ -19,9 +19,9 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
-        int direction = isWhite() ? 1 : -1;
+        int direction = isWhite() ? -1 : 1;
 
-        // Hier wird geprüft ob der Bauer angreifen kann
+        // Laufmechanik eines Bauer
         if (startY + direction == endY && startX == endX) {
             if (board.getPiece(endX, endY) == null) {
                 return true;
