@@ -8,8 +8,13 @@ public class Board {
 
     public Board() {
         grid = new Piece[8][8];
-        // Initialize the board with pieces
-        // ...
+        initializeBoard();
+    }
+    public boolean getTurn() {
+        return isWhiteTurn;
+    }
+    public void setTurn(boolean turn) {
+        isWhiteTurn = turn;
     }
 
     public Piece getPiece(int x, int y) {
@@ -71,5 +76,12 @@ public class Board {
 
         grid[4][7] = new King(true);
         grid[4][0] = new King(false);
+    }
+    public void clearBoard() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                grid[i][j] = null;
+            }
+        }
     }
 }
