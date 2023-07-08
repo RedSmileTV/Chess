@@ -16,7 +16,7 @@ public class GUI extends JFrame implements ActionListener {
     private final JButton resetButton = new JButton();
     private JLabel turnLabel = new JLabel();
     private final Board board = new Board();
-    private boolean firstClick = true;
+    private boolean isFirstClick = true;
     private int startX, startY;
 
     public GUI() {
@@ -57,10 +57,12 @@ public class GUI extends JFrame implements ActionListener {
         resetButton.setText("Reset");
         resetButton.addActionListener(event -> {
             if (event.getSource() == resetButton) {
+                isFirstClick = true;
                 board.clearBoard();
                 board.initializeBoard();
                 turnChecker();
                 updateBoard();
+                clearBoardColors();
             }
         });
 
@@ -91,32 +93,36 @@ public class GUI extends JFrame implements ActionListener {
         setResizable(false);
         setVisible(true);
     }
-
     @Override
     public void actionPerformed(ActionEvent event) {
         int a = Integer.parseInt(event.getActionCommand());
         int x = a / 8;
         int y = a % 8;
         System.out.println("x: " + x + " y: " + y);
-        System.out.println(this.board.getPiece(x, y));
+        System.out.println(board.getPiece(x, y));
 
         Piece startPiece, endPiece;
 
-        if (firstClick) {
-            firstClick = false;
+        if (isFirstClick) {
+            isFirstClick = false;
             startX = x;
             startY = y;
             boardSquares[y][x].setBackground(Color.YELLOW);
         }
         else {
-            firstClick = true;
+            isFirstClick = true;
             startPiece = board.getPiece(startX, startY);
             endPiece = board.getPiece(x, y);
+
+            if (startPiece == null) return; // Keine Figur ausgewählt
+            if (startPiece.isWhite() != board.getTurn()) return; // Falscher Spieler
 
             if (endPiece == null || startPiece.isWhite() == !endPiece.isWhite()) {
                 // Make move
                 if (startPiece.isValidMove(board, startX, startY, x, y)) {
                     board.makeMove(startX, startY, x, y);
+                    updateBoard();
+
                     boardSquares[y][x].setBackground(Color.GREEN);
                     board.setTurn(!board.getTurn());
                     turnChecker();
@@ -127,10 +133,35 @@ public class GUI extends JFrame implements ActionListener {
             }
 
             else {
-                firstClick = false;
-                startPiece = board.getPiece(x, y);
+                // Figur neu auswählen
+                isFirstClick = false;
+                startX = x;
+                startY = y;
                 System.out.println("Reselected");
-                // Reselect piece
+            }
+        }
+    }
+    public void updateSquareIcon(int x, int y, Board board) {
+        x = x - 1;
+        y = (y - 8) * -1;
+        Piece piece = board.getPiece(x, y);
+
+        if (piece != null) {
+            // Zeigt das jeweilige icon für die jeweilige Figur an
+            ImageIcon pieceIcon = piece.getIcon();
+//            System.out.println("x: " + x + " y: " + y);
+            boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
+        }
+        else boardSquares[y][x].setIcon(null);
+    }
+    private ImageIcon resizeIcon(ImageIcon pieceIcon) {
+        Image scaledPieceImage = pieceIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledPieceImage);
+    }
+    private void updateBoard() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                updateSquareIcon(x + 1, y + 1, this.board);
             }
         }
     }
@@ -146,29 +177,11 @@ public class GUI extends JFrame implements ActionListener {
             turnLabel.setBackground(Color.BLACK);
         }
     }
-
-    public void updateSquareIcon(int x, int y, Board board) {
-        x = x - 1;
-        y = (y - 8) * -1;
-        Piece piece = board.getPiece(x, y);
-
-        if (piece != null) {
-            // Zeigt das jeweilige icon für die jeweilige Figur an
-            ImageIcon pieceIcon = piece.getIcon();
-//            System.out.println("x: " + x + " y: " + y);
-            boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
-        }
-        else boardSquares[y][x].setIcon(null);
-    }
-
-    private ImageIcon resizeIcon(ImageIcon pieceIcon) {
-        Image scaledPieceImage = pieceIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledPieceImage);
-    }
-    private void updateBoard() {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                updateSquareIcon(x + 1, y + 1, this.board);
+    private void clearBoardColors() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if ((j + i) % 2 == 0) boardSquares[j][i].setBackground(new Color(245, 245, 230));
+                else boardSquares[j][i].setBackground(new Color(0, 80, 0));
             }
         }
     }
