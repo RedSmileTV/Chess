@@ -5,7 +5,7 @@ import main.pieces.*;
 public class Board {
     private final Piece[][] grid;
     private boolean isWhiteTurn;
-
+    private Piece lastMovedPiece;
     public Board() {
         grid = new Piece[8][8];
         initializeBoard();
@@ -16,7 +16,6 @@ public class Board {
     public void setTurn(boolean turn) {
         isWhiteTurn = turn;
     }
-
     public Piece getPiece(int x, int y) {
         return grid[x][y];
     }
@@ -24,7 +23,12 @@ public class Board {
     public void setPiece(int x, int y, Piece piece) {
         grid[x][y] = piece;
     }
-
+    public Piece getLastMovedPiece() {
+        return lastMovedPiece;
+    }
+    public void setLastMovedPiece(Piece piece) {
+        lastMovedPiece = piece;
+    }
     public boolean isValidMove(int startX, int startY, int endX, int endY) {
         Piece piece = getPiece(startX, startY);
         return piece != null && piece.isValidMove(this, startX, startY, endX, endY);
