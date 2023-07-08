@@ -20,12 +20,21 @@ public class Pawn extends Piece {
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         int direction = isWhite() ? -1 : 1;
-
-        // Laufmechanik eines Bauer
+        // Laufmechanik eines Bauer (1 Feld)
         if (startY + direction == endY && startX == endX) {
-            if (board.getPiece(endX, endY) == null) {
-                return true;
-            }
+            return board.getPiece(endX, endY) == null;
+        }
+        // Laufmechanik (2 Felder)
+        else if (startY + direction * 2 == endY && startX == endX && startY == 6 || startY == 1 && startX == endX) {
+            return board.getPiece(endX, endY) == null;
+        }
+        // Kollisionsmechanik (diagonal schlagen)
+        else if (Math.abs(startX - endX) == 1 && startY + direction == endY) {
+            return board.getPiece(endX, endY) != null;
+        }
+        // TODO En passant
+        else if (true) {
+
         }
 
         return false;
