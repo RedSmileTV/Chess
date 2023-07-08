@@ -17,6 +17,7 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel turnLabel = new JLabel();
     private final Board board = new Board();
     private boolean firstClick = true;
+    private int startX, startY;
 
     public GUI() {
         super();
@@ -58,6 +59,7 @@ public class GUI extends JFrame implements ActionListener {
             if (event.getSource() == resetButton) {
                 board.clearBoard();
                 board.initializeBoard();
+                turnChecker();
                 updateBoard();
             }
         });
@@ -77,7 +79,7 @@ public class GUI extends JFrame implements ActionListener {
             for (int j = 0; j < 8; j++) {
                 boardSquares[i][j] = new JButton();
                 boardSquares[i][j].setBounds(50, 50, 50, 50);
-                boardSquares[i][j].setActionCommand("" + (i + j * 8));
+                boardSquares[i][j].setActionCommand(String.valueOf((i + j * 8)));
                 boardSquares[i][j].addActionListener(this);
                 boardPanel.add(boardSquares[i][j]);
 
@@ -98,29 +100,38 @@ public class GUI extends JFrame implements ActionListener {
         System.out.println("x: " + x + " y: " + y);
         System.out.println(this.board.getPiece(x, y));
 
-
-        Piece piece;
+        Piece startPiece, endPiece;
 
         if (firstClick) {
             firstClick = false;
+            startX = x;
+            startY = y;
             boardSquares[y][x].setBackground(Color.YELLOW);
-            piece = board.getPiece(x, y);
-
-
-
         }
         else {
             firstClick = true;
-            // White pawn testing
-            piece = board.getPiece(x, y);
-            if (piece.isValidMove(board, x, y, x, y - 1)) {
-                board.makeMove(x, y, x, y - 1);
-                updateBoard();
+            startPiece = board.getPiece(startX, startY);
+            endPiece = board.getPiece(x, y);
+
+            if (endPiece == null || startPiece.isWhite() == !endPiece.isWhite()) {
+                // Make move
+                if (startPiece.isValidMove(board, startX, startY, x, y)) {
+                    board.makeMove(startX, startY, x, y);
+                    boardSquares[y][x].setBackground(Color.GREEN);
+                    board.setTurn(!board.getTurn());
+                    turnChecker();
+                }
+                else System.out.println("Invalid move!!!");
+
+
             }
-            else System.out.println("Invalid move!!!!!");
-            board.setTurn(!board.getTurn());
-            turnChecker();
-            boardSquares[y][x].setBackground(Color.GREEN);
+
+            else {
+                firstClick = false;
+                startPiece = board.getPiece(x, y);
+                System.out.println("Reselected");
+                // Reselect piece
+            }
         }
     }
     private void turnChecker() {
