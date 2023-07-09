@@ -16,7 +16,6 @@ public class Rook extends Piece {
         if (isWhite()) return whiteIcon;
         else return blackIcon;
     }
-
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         //Laufmechanik eines Turms
@@ -35,7 +34,6 @@ public class Rook extends Piece {
             }
             return true;
         }
-
         return false;
     }
 }
