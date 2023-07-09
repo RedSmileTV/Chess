@@ -6,6 +6,8 @@ public class Board {
     private final Piece[][] grid;
     private boolean isWhiteTurn;
     private Piece lastMovedPiece;
+    private int lastMovedPieceX;
+    private int lastMovedPieceY;
     public Board() {
         grid = new Piece[8][8];
         initializeBoard();
@@ -19,7 +21,6 @@ public class Board {
     public Piece getPiece(int x, int y) {
         return grid[x][y];
     }
-
     public void setPiece(int x, int y, Piece piece) {
         grid[x][y] = piece;
     }
@@ -29,24 +30,31 @@ public class Board {
     public void setLastMovedPiece(Piece piece) {
         lastMovedPiece = piece;
     }
+    public int getLastMovedPieceX() {
+        return lastMovedPieceX;
+    }
+    public int getLastMovedPieceY() {
+        return lastMovedPieceY;
+    }
     public boolean isValidMove(int startX, int startY, int endX, int endY) {
         Piece piece = getPiece(startX, startY);
         return piece != null && piece.isValidMove(this, startX, startY, endX, endY);
         // Additional validation logic, e.g., checking for obstructions, captures, etc.
         // ...
     }
-    public boolean makeMove(int startX, int startY, int endX, int endY) {
+    public void makeMove(int startX, int startY, int endX, int endY) {
         if (!isValidMove(startX, startY, endX, endY)) {
-            return false;
+            return;
         }
 
+        lastMovedPieceX = endX;
+        lastMovedPieceY = endY;
         Piece piece = getPiece(startX, startY);
         setPiece(startX, startY, null);
         setPiece(endX, endY, piece);
 
         // Additional logic for special moves, captures, promotions, etc.
 
-        return true;
     }
     public void initializeBoard() {
         // Weiß beginnt

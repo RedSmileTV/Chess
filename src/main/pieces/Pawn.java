@@ -16,7 +16,6 @@ public class Pawn extends Piece {
         if (isWhite()) return whiteIcon;
         else return blackIcon;
     }
-
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         int direction = isWhite() ? -1 : 1;
@@ -26,6 +25,7 @@ public class Pawn extends Piece {
         }
         // Laufmechanik (2 Felder)
         else if (startY + direction * 2 == endY && startX == endX && startY == 6 || startY == 1 && startX == endX) {
+            board.setLastMovedPiece(board.getPiece(endX, endY));
             return board.getPiece(endX, endY) == null;
         }
         // Kollisionsmechanik (diagonal schlagen)
@@ -33,10 +33,12 @@ public class Pawn extends Piece {
             return board.getPiece(endX, endY) != null;
         }
         // TODO En passant
-        else if (true) {
+        else if (board.getLastMovedPiece() instanceof Pawn) {
+            Pawn lastMovedPawn = (Pawn) board.getLastMovedPiece();
+            int lastMovedPawnX = board.getLastMovedPieceX();
+            int lastMovedPawnY = board.getLastMovedPieceY();
 
         }
-
         return false;
     }
 }

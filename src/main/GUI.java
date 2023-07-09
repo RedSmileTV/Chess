@@ -104,34 +104,30 @@ public class GUI extends JFrame implements ActionListener {
         Piece startPiece, endPiece;
 
         if (isFirstClick) {
+            if (board.getPiece(x, y) == null) return; // Keine Figur ausgewählt
             isFirstClick = false;
             startX = x;
             startY = y;
-            boardSquares[y][x].setBackground(Color.YELLOW);
         }
         else {
             isFirstClick = true;
             startPiece = board.getPiece(startX, startY);
-            endPiece = board.getPiece(x, y);
 
-            if (startPiece == null) return; // Keine Figur ausgewählt
             if (startPiece.isWhite() != board.getTurn()) return; // Falscher Spieler
 
+            endPiece = board.getPiece(x, y);
+
             if (endPiece == null || startPiece.isWhite() == !endPiece.isWhite()) {
-                // Make move
+                // Überprüft ob Zug gemacht werden kann
                 if (startPiece.isValidMove(board, startX, startY, x, y)) {
                     board.makeMove(startX, startY, x, y);
                     updateBoard();
-
-                    boardSquares[y][x].setBackground(Color.GREEN);
                     board.setTurn(!board.getTurn());
                     turnChecker();
+                    
                 }
                 else System.out.println("Invalid move!!!");
-
-
             }
-
             else {
                 // Figur neu auswählen
                 isFirstClick = false;
@@ -149,7 +145,6 @@ public class GUI extends JFrame implements ActionListener {
         if (piece != null) {
             // Zeigt das jeweilige icon für die jeweilige Figur an
             ImageIcon pieceIcon = piece.getIcon();
-//            System.out.println("x: " + x + " y: " + y);
             boardSquares[y][x].setIcon(resizeIcon(Objects.requireNonNull(pieceIcon)));
         }
         else boardSquares[y][x].setIcon(null);
@@ -185,4 +180,20 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
     }
+//    private void checkKingInCheck(Board board) {
+//        boolean isWhiteTurn = board.getTurn();
+//        int[] kingPos = getKingPos(board, isWhiteTurn);
+//        assert kingPos != null;
+//        int kingX = kingPos[0];
+//        int kingY = kingPos[1];
+//
+//        King king = (King) board.getPiece(kingX, kingY);
+//        if (king.isCheck(board, kingX, kingY)) {
+//            king.setCheckIcon();
+//            updateSquareIcon(kingX + 1, kingY + 1, board);
+//        } else {
+//            king.setNormalIcon();
+//            updateSquareIcon(kingX + 1, kingY + 1, board);
+//        }
+//    }
 }
