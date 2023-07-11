@@ -50,11 +50,11 @@ public class Board {
         lastMovedPieceX = endX;
         lastMovedPieceY = endY;
         Piece piece = getPiece(startX, startY);
+        setLastMovedPiece(piece);
         setPiece(startX, startY, null);
         setPiece(endX, endY, piece);
 
         // Additional logic for special moves, captures, promotions, etc.
-
     }
     public void initializeBoard() {
         // Weiß beginnt
@@ -93,6 +93,7 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 grid[i][j] = null;
+
             }
         }
     }

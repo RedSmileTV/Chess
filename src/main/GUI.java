@@ -18,7 +18,6 @@ public class GUI extends JFrame implements ActionListener {
     private final Board board = new Board();
     private boolean isFirstClick = true;
     private int startX, startY;
-
     public GUI() {
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -95,13 +94,12 @@ public class GUI extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent event) {
+        Piece startPiece, endPiece;
         int a = Integer.parseInt(event.getActionCommand());
         int x = a / 8;
         int y = a % 8;
-        System.out.println("x: " + x + " y: " + y);
-        System.out.println(board.getPiece(x, y));
-
-        Piece startPiece, endPiece;
+//        System.out.println("x: " + x + " y: " + y);
+//        System.out.println(board.getPiece(x, y));
 
         if (isFirstClick) {
             if (board.getPiece(x, y) == null) return; // Keine Figur ausgewählt
@@ -180,20 +178,8 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
     }
-//    private void checkKingInCheck(Board board) {
-//        boolean isWhiteTurn = board.getTurn();
-//        int[] kingPos = getKingPos(board, isWhiteTurn);
-//        assert kingPos != null;
-//        int kingX = kingPos[0];
-//        int kingY = kingPos[1];
-//
-//        King king = (King) board.getPiece(kingX, kingY);
-//        if (king.isCheck(board, kingX, kingY)) {
-//            king.setCheckIcon();
-//            updateSquareIcon(kingX + 1, kingY + 1, board);
-//        } else {
-//            king.setNormalIcon();
-//            updateSquareIcon(kingX + 1, kingY + 1, board);
-//        }
-//    }
+    public static void showCheckmate(boolean isWinnerWhite) {
+        if (isWinnerWhite) JOptionPane.showMessageDialog(null, "White Wins.", "Checkmate!", JOptionPane.INFORMATION_MESSAGE);
+        else JOptionPane.showMessageDialog(null, "Black Wins.", "Checkmate!", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

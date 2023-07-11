@@ -20,7 +20,7 @@ public class Rook extends Piece {
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         //Laufmechanik eines Turms
         if (startX == endX || startY == endY) {
-            //kollision
+            // Kollision
             int dx = Integer.compare(endX, startX);
             int dy = Integer.compare(endY, startY);
             int x = startX + dx;

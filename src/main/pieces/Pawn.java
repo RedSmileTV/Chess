@@ -24,20 +24,30 @@ public class Pawn extends Piece {
             return board.getPiece(endX, endY) == null;
         }
         // Laufmechanik (2 Felder)
-        else if (startY + direction * 2 == endY && startX == endX && startY == 6 || startY == 1 && startX == endX) {
-            board.setLastMovedPiece(board.getPiece(endX, endY));
+        else if (startY + direction * 2 == endY && startX == endX && (startY == 6 || startY == 1)) {
             return board.getPiece(endX, endY) == null;
         }
         // Kollisionsmechanik (diagonal schlagen)
         else if (Math.abs(startX - endX) == 1 && startY + direction == endY) {
-            return board.getPiece(endX, endY) != null;
-        }
-        // TODO En passant
-        else if (board.getLastMovedPiece() instanceof Pawn) {
-            Pawn lastMovedPawn = (Pawn) board.getLastMovedPiece();
-            int lastMovedPawnX = board.getLastMovedPieceX();
-            int lastMovedPawnY = board.getLastMovedPieceY();
+            if (board.getPiece(endX, endY) != null) {
+                return true;
+            }
+            // TODO En passant logik
+            else if (board.getLastMovedPiece() instanceof Pawn) {
+                int lastMovedPawnX = board.getLastMovedPieceX();
+                int lastMovedPawnY = board.getLastMovedPieceY();
+                System.out.println("TestX: " + lastMovedPawnX);
+                System.out.println("TestY: " + lastMovedPawnY);
 
+//                if (Math.abs(startX - endX) == 1 && startY == lastMovedPawnY && endY == lastMovedPawnY + direction) {
+//                    board.setPiece(lastMovedPawnX, lastMovedPawnY, null);
+//                    return true;
+//                }
+                if (board.getLastMovedPiece().isWhite() && lastMovedPawnY == 0 || !board.getLastMovedPiece().isWhite() && lastMovedPawnY == 7) {
+                    // TODO Promotion logic
+                    System.out.println("Promotion");
+                }
+            }
         }
         return false;
     }

@@ -25,16 +25,25 @@ public class King extends Piece {
         else blackIcon = new ImageIcon(Objects.requireNonNull(Main.class.getResource("/resources/blackKing.png")));
     }
 
+
+    // TODO Check logic
     @Override
     public boolean isValidMove(Board board, int startX, int startY, int endX, int endY) {
         int rowDiff = Math.abs(endX - startX);
         int colDiff = Math.abs(endY - startY);
 
+
+
         return rowDiff == colDiff;
     }
-    private void isCheck() {
-
+    private boolean isCheck(Board board, int startX, int startY, int endX, int endY) {
+        if (!isValidMove(board, startX, startY, endX, endY)) {
+            setCheckIcon();
+            return true;
+        }
+        else {
+            setNormalIcon();
+            return false;
+        }
     }
-
-
 }
