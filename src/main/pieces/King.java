@@ -32,8 +32,6 @@ public class King extends Piece {
         int rowDiff = Math.abs(endX - startX);
         int colDiff = Math.abs(endY - startY);
 
-
-
         return rowDiff == colDiff;
     }
     private boolean isCheck(Board board, int startX, int startY, int endX, int endY) {
