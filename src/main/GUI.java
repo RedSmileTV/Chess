@@ -178,7 +178,7 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
     }
-    public static void showCheckmate(boolean isWinnerWhite) {
+    private void showCheckmate(boolean isWinnerWhite) {
         if (isWinnerWhite) JOptionPane.showMessageDialog(null, "White Wins.", "Checkmate!", JOptionPane.INFORMATION_MESSAGE);
         else JOptionPane.showMessageDialog(null, "Black Wins.", "Checkmate!", JOptionPane.INFORMATION_MESSAGE);
     }
